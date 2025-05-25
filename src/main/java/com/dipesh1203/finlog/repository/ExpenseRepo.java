@@ -1,9 +1,10 @@
 package com.dipesh1203.finlog.repository;
 
-import com.dipesh1203.finlog.entity.expense;
+import com.dipesh1203.finlog.entity.Expense;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface expenseRepo extends MongoRepository<expense, String> {
+public interface ExpenseRepo extends MongoRepository<Expense, ObjectId> {
 }
