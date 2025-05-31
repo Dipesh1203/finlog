@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ExpenseService {
@@ -21,18 +22,20 @@ public class ExpenseService {
     private UserService userService;
 
     @Transactional
-    public void saveExpense(Expense e,String username){
+    public void saveExpense(Expense e, String username){
         try{
             User user =  userService.findByUserName(username);
             e.setDate(LocalDateTime.now());
             Expense saved = expenseR.save(e);
             user.getExpenses().add(saved);
-            user.setUserName(null);
             userService.saveUser(user);
         }
         catch(Exception error){
             System.out.println("Error: " + error.getMessage());
         }
+    }
 
+    public List<Expense> findAllExpense(String userName){
+        return expenseR.findBySenderUserName(userName);
     }
 }

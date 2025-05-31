@@ -1,6 +1,7 @@
 package com.dipesh1203.finlog.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class Expense {
     private double amount;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime date;
-    private String category;
+    private List<String> categories;
     @DBRef
     private User sender;
     @DBRef

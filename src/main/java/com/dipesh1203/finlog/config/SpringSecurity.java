@@ -33,7 +33,7 @@ public class SpringSecurity {
     private JwtFilter jwtFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
-        return http.authorizeHttpRequests(request -> request
+        return http.cors(Customizer.withDefaults()).authorizeHttpRequests(request -> request
                         .requestMatchers("/expense/**","/user/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/**").permitAll()

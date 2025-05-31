@@ -52,7 +52,6 @@ public class UserController {
             existingUser.setUserName(user.getUserName());
             existingUser.setPassword(user.getPassword());
             boolean isSaved = userService.saveUser(existingUser);
-            log.info(" saved "+isSaved);
             return new ResponseEntity<>(existingUser, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
