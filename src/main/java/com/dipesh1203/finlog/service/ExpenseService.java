@@ -22,10 +22,17 @@ public class ExpenseService {
 
     @Transactional
     public void saveExpense(Expense e,String username){
-        User user =  userService.findByUserName(username);
-        e.setDate(LocalDateTime.now());
-        Expense saved = expenseR.save(e);
-        user.getExpenses().add(saved);
-        userService.saveUser(user);
+        try{
+            User user =  userService.findByUserName(username);
+            e.setDate(LocalDateTime.now());
+            Expense saved = expenseR.save(e);
+            user.getExpenses().add(saved);
+            user.setUserName(null);
+            userService.saveUser(user);
+        }
+        catch(Exception error){
+            System.out.println("Error: " + error.getMessage());
+        }
+
     }
 }
