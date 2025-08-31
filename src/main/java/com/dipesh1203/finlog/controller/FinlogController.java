@@ -105,16 +105,50 @@ private UserService userService;
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Expense> getExpense(@RequestBody Expense expense,@PathVariable String expenseId) {
+    public ResponseEntity<Expense> updateExpense(@RequestBody Expense expense,@PathVariable String id) {
         try {
             User currentUser = authUtil.getCurrentUser();
-            Expense existingExpense = expenseR.findById(new ObjectId(expenseId)).get();
+            Expense existingExpense = expenseR.findById(new ObjectId(id)).get();
+            
+            // Verify expense belongs to current user
+            if (!existingExpense.getSender().getUserName().equals(currentUser.getUserName())) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+            
             existingExpense.setAmount(expense.getAmount());
             existingExpense.setDescription(expense.getDescription());
             existingExpense.setCategories(expense.getCategories());
             expenseService.saveExpense(existingExpense,currentUser.getUserName());
-            return new ResponseEntity<Expense>(existingExpense, HttpStatus.FOUND);
+            return new ResponseEntity<Expense>(existingExpense, HttpStatus.OK);
         } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteExpense(@PathVariable String id) {
+        try {
+            User currentUser = authUtil.getCurrentUser();
+            Expense existingExpense = expenseR.findById(new ObjectId(id)).orElse(null);
+            
+            if (existingExpense == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            
+            // Verify expense belongs to current user
+            if (!existingExpense.getSender().getUserName().equals(currentUser.getUserName())) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+            
+            expenseR.deleteById(new ObjectId(id));
+            
+            // Remove from user's expense list
+            currentUser.getExpenses().removeIf(expense -> expense.getId().equals(new ObjectId(id)));
+            userService.saveUser(currentUser);
+            
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            log.error("Error deleting expense: ", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
