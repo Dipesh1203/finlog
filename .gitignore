@@ -31,3 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### React Native ###
+FinlogApp/node_modules/
+FinlogApp/.expo/
+FinlogApp/dist/
+FinlogApp/.expo-shared/
+FinlogApp/*.log
+FinlogApp/.DS_Store
+FinlogApp/android/app/build/
+FinlogApp/android/.gradle/
+FinlogApp/ios/build/
+FinlogApp/ios/Pods/
+FinlogApp/ios/*.xcworkspace/xcuserdata/
